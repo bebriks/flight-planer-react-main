@@ -1,0 +1,57 @@
+.minus{
+    border: 1px solid #000;
+    border-radius: 30px;
+    margin-left: 25px;
+    width: 36px;
+    height: 36px;
+    background: #2a65a1;
+}
+.added-flight{
+    display: flex;
+    background-color: #ecf0f1;
+    border: 1px solid;
+    border-color: #000000;
+    border-radius: 30px;
+    height: auto;
+    width: 630px;
+    margin-top: 10px;
+    align-items: center;
+    height: 50px;
+}
+.table-element{
+    display: flex;
+    width: 630px;
+    align-items: center;
+}
+.table-speed{
+    width: 155px;
+    word-wrap:break-word;
+}
+.table-element-item{
+    text-align: center;
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+    word-wrap: break-word
+}
+.table-element-item-1{
+    display: block;
+    margin-left: 15px;
+    width: 40px;
+    justify-items: right;
+}
+.table-element-item-2{
+    display: block;
+    width: 180px;
+    justify-items: center;
+}
+.table-element-item-3{
+    display: block;
+    width: 180px;
+    justify-items: center;
+}
+.table-element-item-4{
+    display: block;
+    width: 170px;
+    justify-items: center;
+}
