@@ -1,12 +1,15 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import PlanItem from "../Plan/Plan";
 import plus from '../../assets/Union.png'
 import './PlanTable.css';
 
 
 const MainApp = () => {
-
   const [plan, setPlan] = useState([]);
+
+  useEffect(() => {
+    fetchPlanData(); // Загружаем данные при инициализации компонента
+  }, []);
 
   const getData = (form) => {
     const dataForm = new FormData(form);
@@ -46,15 +49,13 @@ const MainApp = () => {
       // Handle any errors that occur during the fetch
       console.error('There was an error sending the data to the server:', error);
     }
-
-    // Clearing the form should likely be after ensuring the plan has been sent and processed
-    // clearForm();
   };
+
   const logPlanItemData = (updatedPlan) => {
     console.log(updatedPlan);
   };
   const sendDataToServer = async (data) => {
-    const serverUrl = "https://localhost:7110/api/launch/stages"; // Endpoint where you send the data
+    const serverUrl = "https://localhost:7110/api/launch/stages";
     const response = await fetch(serverUrl, {
       method: 'POST',
       headers: {
@@ -65,7 +66,25 @@ const MainApp = () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    return response.json(); // Or `return response;` if you don't need to process JSON response
+    return response.json();
+  };
+  const fetchPlanData = async () => {
+    try {
+      const serverUrl = "https://localhost:7110/api/launch/stages";
+      const response = await fetch(serverUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setPlan(data); // Обновляем состояние плана данными с сервера
+    } catch (error) {
+      console.error('There was an error fetching the data:', error);
+    }
   };
   return (
     <>
@@ -109,8 +128,8 @@ const MainApp = () => {
           <tbody>
             <div class='scroll'>
             {plan && plan.map(element => 
-              <PlanItem 
-                key={element.id}
+              <PlanItem
+                key={element.id} 
                 index={element.index}
                 heading={element.heading}
                 speed={element.speed}

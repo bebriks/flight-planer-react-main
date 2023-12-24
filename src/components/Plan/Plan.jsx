@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../Plan/Plan.css'
-import minus from '../../assets/Decrease.png'
+import '../Plan/Plan.css';
+import minus from '../../assets/Decrease.png';
 
 
 
@@ -11,8 +11,7 @@ const PlanItem = ({index, heading, speed, altitude}) => {
         return () => {
             
         };
-    }, []);
-
+    }, {});
     const handleClick = async () => {
         try {
             const response = await fetch(`https://localhost:7110/api/launch/stages/${index}`, {
