@@ -8,7 +8,7 @@ const MainApp = () => {
   const [plan, setPlan] = useState([]);
 
   useEffect(() => {
-    fetchPlanData(); // Загружаем данные при инициализации компонента
+    fetchPlanData();
   }, []);
 
   const getData = (form) => {
@@ -17,23 +17,22 @@ const MainApp = () => {
     for (let [name, value] of dataForm){
       data[name] = value;
     }
+    console.log(data);
     return data;
   }
-
   const clearForm = () => {
     const form = document.getElementById('form');
 
-    form.querySelector('.heading').value = '';
-    form.querySelector('.speed').value = '';
-    form.querySelector('.altitude').value = '';
+    form.querySelector('input[name=heading]').value = '';
+    form.querySelector('input[name=speed]').value = '';
+    form.querySelector('input[name=altitude]').value = '';
   }
 
   const handlerAddPlan = async (formData) => {
-    // Validate formData before proceeding
     if (!formData.heading || !formData.speed || !formData.altitude) { return; }
 
     // Construct new plan item
-    const newPlan = { index: plan.length, ...formData };
+    const newPlan = { id: plan.length, ...formData };
 
     // Update the state and log the plan items
     setPlan((prevPlan) => {
@@ -49,6 +48,7 @@ const MainApp = () => {
       // Handle any errors that occur during the fetch
       console.error('There was an error sending the data to the server:', error);
     }
+    clearForm();
   };
 
   const logPlanItemData = (updatedPlan) => {
@@ -66,8 +66,10 @@ const MainApp = () => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
+    //clearForm();
     return response.json();
   };
+
   const fetchPlanData = async () => {
     try {
       const serverUrl = "https://localhost:7110/api/launch/stages";
@@ -81,11 +83,14 @@ const MainApp = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      setPlan(data); // Обновляем состояние плана данными с сервера
+      setPlan(data);
     } catch (error) {
       console.error('There was an error fetching the data:', error);
     }
   };
+  const onRemoveData = async () => {
+    await fetchPlanData();
+  }
   return (
     <>
       <header className="App-header">
@@ -117,7 +122,6 @@ const MainApp = () => {
               <h2>Flight Plan Stages</h2>
               <div class="table-head-info">
                 <tr class="table-element">
-                  <th class="table-element-info table-element-info-1">#</th>
                   <th class="table-element-info table-element-info-2">Course</th>
                   <th class="table-element-info table-element-info-3 table-speed">Indicated Air Speed</th>
                   <th class="table-element-info table-element-info-4">TrueAltitude</th>
@@ -127,13 +131,15 @@ const MainApp = () => {
           </thead>
           <tbody>
             <div class='scroll'>
-            {plan && plan.map(element => 
+            {plan && plan.map((element, index) =>
               <PlanItem
-                key={element.id} 
-                index={element.index}
+                key={element.id}
+                id={element.id}
+                index={index}
                 heading={element.heading}
                 speed={element.speed}
                 altitude={element.altitude}
+                onRemoveData={onRemoveData}
               />
             )} 
             </div>
